@@ -33,7 +33,7 @@ import time
 st.title("Youtube CJK translator")
 
 language = [{'ja':"🇯🇵"},{'ko':"🇰🇷"},{'zh-CN':"🇨🇳"}]
-selected_lang = language['ja']
+selected_lang = [lang for lang in language if 'ja' in lang][0]['ja']
 
 
 # modal = Modal("Demo Modal",
