@@ -190,7 +190,9 @@ def get_chat_response(prompt,txt):
         You are a language expert assistant in Japanese, Chinese, Korean.
         If you are asked about unrelated expertise, then politely reply I don't know.
         You are expert in vocabulary, grammatical cases, conjugation, slang.
-        Answer the question based on the following context:
+        Analyse this sentence into its grammatical structures
+        in terms of linguistic and phonetic meanings
+        based on the following context:
         {summary_text}
         Question: {prompt}
     """
