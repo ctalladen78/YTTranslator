@@ -1,0 +1,8 @@
+chromadb
+langchain
+openai
+pandas
+requests
+youtube_transcript_api
+deep-translator
+transformers
