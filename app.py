@@ -168,7 +168,7 @@ def get_chat_response(prompt,txt):
         length_function = len,
         is_separator_regex = False,
     )
-    chunks = text_splitter.split_text(txt)
+    chunks = text_splitter.split_text(combined_text)
     vectordb = FAISS.from_texts(chunks, embeddings)
     retriever = vectordb.as_retriever()
     qa = RetrievalQA.from_chain_type(llm=cllm,
@@ -189,8 +189,6 @@ def get_chat_response(prompt,txt):
         If you are asked about unrelated expertise, then politely reply I don't know.
         You are expert in vocabulary, grammatical cases, conjugation, slang.
         Chat history: {chat_history}
-        Answer the question based on the following context:
-        {combined_text}
         Question: {prompt}
     """
     # prompt = ChatPromptTemplate.from_template(template)
