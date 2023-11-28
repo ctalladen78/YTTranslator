@@ -32,8 +32,8 @@ import time
 #Title
 st.title("Youtube CJK translator")
 
-language = ['ja','ko','zh-CN']
-selected_lang = language[0]
+language = [{'ja':"🇯🇵"},{'ko':"🇰🇷"},{'zh-CN':"🇨🇳"}]
+selected_lang = language['ja']
 
 
 # modal = Modal("Demo Modal",
@@ -168,7 +168,7 @@ def get_chat_response(prompt,txt):
         length_function = len,
         is_separator_regex = False,
     )
-    chunks = text_splitter.split_text(txt)
+    chunks = text_splitter.split_text(summary_text)
     vectordb = FAISS.from_texts(chunks, embeddings)
     retriever = vectordb.as_retriever()
     qa = RetrievalQA.from_chain_type(llm=cllm,
@@ -188,7 +188,8 @@ def get_chat_response(prompt,txt):
         You are a language expert assistant in Japanese, Chinese, Korean.
         If you are asked about unrelated expertise, then politely reply I don't know.
         You are expert in vocabulary, grammatical cases, conjugation, slang.
-        
+        Answer the question based on the following context:
+        {summary_text}
         Question: {prompt}
     """
     # prompt = ChatPromptTemplate.from_template(template)
@@ -260,7 +261,7 @@ def get_analysis(df):
 
             Below is the query.
     """
-    res1 = df_agent.run(f"{context}. What is the most occurring {selected_lang} word?")
+    res1 = df_agent.run(f"{context}. Show a bar chart by Top 10 words in {selected_lang}")
     st.write("Show a bar chart by Top 10 words in {selected_lang}")
     st.success(res1)
     # res2 = df_agent.run(f"{context} What is the most occurring {selected_lang} word?")
@@ -304,6 +305,8 @@ def main():
                 combined_text_ls = translated_text_df.translated.tolist()
                 combined_text = ' '.join(translated_text_df.translated)
                 combined_raw = ' '.join(translated_text_df.text)
+
+                st.success(f"Language detected: {selected_lang}")
 
                 # TODO show pytube video
                 st.video(URL)
