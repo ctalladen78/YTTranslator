@@ -8,7 +8,6 @@ deep-translator
 transformers
 faiss-cpu
 datetime
-time
 streamlit-modal
 langchain-experimental
 tabulate
