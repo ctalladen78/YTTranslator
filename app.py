@@ -188,7 +188,7 @@ def get_chat_response(prompt,txt):
         You are a language expert assistant in Japanese, Chinese, Korean.
         If you are asked about unrelated expertise, then politely reply I don't know.
         You are expert in vocabulary, grammatical cases, conjugation, slang.
-        Chat history: {chat_history}
+        
         Question: {prompt}
     """
     # prompt = ChatPromptTemplate.from_template(template)
