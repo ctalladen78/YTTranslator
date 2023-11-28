@@ -324,7 +324,7 @@ def main():
         else:
             with st.spinner("Summarizing...."):
                 print(combined_text)
-                summary_txt = get_summarization(combined_text)
+                summary_txt = get_summarization(combined_raw)
                 st.success(summary_txt)
                 # get_analysis(translated_text_df)
 
