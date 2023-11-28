@@ -340,7 +340,7 @@ def main():
         else:
             # get_chat response
             prompt = st.text_input("Chat using summary",
-                "Tell me more about what was translated"
+                "お席をお見受けいたしましたら、お声をおかけいたします"
             )
             if prompt is not None:
                 res = get_chat_response(prompt,combined_text)
