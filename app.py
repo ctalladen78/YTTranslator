@@ -156,7 +156,7 @@ def get_summarization(txt):
     return summary
 
 @st.cache_data
-def get_chat_response(prompt,combined_text):
+def get_chat_response(prompt,txt):
     # langchain qna chain
     # https://github.com/hwchase17/chat-your-data/blob/master/query_data.py
     cllm=ChatOpenAI(temperature=0, openai_api_key=openai_api_key)
@@ -168,7 +168,7 @@ def get_chat_response(prompt,combined_text):
         length_function = len,
         is_separator_regex = False,
     )
-    chunks = text_splitter.split_text(combined_text)
+    chunks = text_splitter.split_text(txt)
     vectordb = FAISS.from_texts(chunks, embeddings)
     retriever = vectordb.as_retriever()
     qa = RetrievalQA.from_chain_type(llm=cllm,
@@ -343,7 +343,7 @@ def main():
                 "お席をお見受けいたしましたら、お声をおかけいたします"
             )
             if prompt is not None:
-                res = get_chat_response(prompt,combined_text)
+                res = get_chat_response(prompt,combined_raw)
                 chat_history.append({"prompt":"res"})
                 print(chat_history)
                 st.success(res)
