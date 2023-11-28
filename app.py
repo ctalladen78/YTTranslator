@@ -326,7 +326,7 @@ def main():
                 print(combined_text)
                 summary_txt = get_summarization(combined_text)
                 st.success(summary_txt)
-                get_analysis(translated_text_df)
+                # get_analysis(translated_text_df)
 
     # qna_tab
     with qna_tab:
