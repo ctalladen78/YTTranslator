@@ -170,7 +170,7 @@ def get_chat_response(prompt,txt):
         length_function = len,
         is_separator_regex = False,
     )
-    chunks = text_splitter.split_text(summary_text)
+    chunks = text_splitter.split_text(txt)
     vectordb = FAISS.from_texts(chunks, embeddings)
     retriever = vectordb.as_retriever()
     qa = RetrievalQA.from_chain_type(llm=cllm,
