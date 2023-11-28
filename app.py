@@ -24,6 +24,7 @@ from langchain.chains import ConversationalRetrievalChain
 from langchain.memory import ConversationBufferMemory
 from langchain.agents.agent_types import AgentType
 from langchain_experimental.agents.agent_toolkits import create_pandas_dataframe_agent
+from langchain.agents import load_tools
 
 from datetime import datetime, timedelta
 import time
@@ -223,10 +224,13 @@ def print_data_one_by_one(row):
 
 @st.cache_data
 def get_analysis(df):
+    tools = load_tools(["python_repl"])
+
     df_agent = create_pandas_dataframe_agent(
         ChatOpenAI(temperature=0, openai_api_key=openai_api_key),
         df,
-        verbose=True)
+        verbose=True,
+        extra_tools=tools)
     context = """
     For the following query, if it requires drawing a table, reply as follows:
             {"table": {"columns": ["column1", "column2", ...], "data": [[value1, value2, ...], [value1, value2, ...], ...]}}
@@ -260,10 +264,10 @@ def get_analysis(df):
     res1 = df_agent.run(f"{context}. What is the most occurring {selected_lang} word?")
     st.write("Show a bar chart by Top 10 words in {selected_lang}")
     st.success(res1)
-    res2 = df_agent.run(f"{context} What is the most occurring {selected_lang} word?")
-    st.success(res2)
-    res3 = df_agent.run(f"{context} List the top most occuring {selected_lang} classified as nouns")
-    st.success(res1)
+    # res2 = df_agent.run(f"{context} What is the most occurring {selected_lang} word?")
+    # st.success(res2)
+    # res3 = df_agent.run(f"{context} List the top most occuring {selected_lang} classified as nouns")
+    # st.success(res1)
 
 
 def main():
