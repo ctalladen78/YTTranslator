@@ -32,8 +32,10 @@ import time
 #Title
 st.title("Youtube CJK translator")
 
-language = [{'ja':"🇯🇵"},{'ko':"🇰🇷"},{'zh-CN':"🇨🇳"}]
-selected_lang = [lang for lang in language if 'ja' in lang][0]['ja']
+language = ['ja','ko'zh-CN']
+selected_lang = language[0]
+# language = [{'ja':"🇯🇵"},{'ko':"🇰🇷"},{'zh-CN':"🇨🇳"}]
+# selected_lang = [lang for lang in language if 'ja' in lang][0]['ja']
 
 
 # modal = Modal("Demo Modal",
