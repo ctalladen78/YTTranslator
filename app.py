@@ -23,6 +23,7 @@ from langchain.chains.question_answering import load_qa_chain
 from langchain.chains import ConversationalRetrievalChain
 from langchain.memory import ConversationBufferMemory
 from langchain.agents.agent_types import AgentType
+from langchain.agents import create_pandas_dataframe_agent
 from langchain_experimental.agents.agent_toolkits import create_pandas_dataframe_agent
 # from langchain.agents import load_tools
 
@@ -313,7 +314,7 @@ def main():
                 st.success(f"Language detected: {selected_lang}")
 
                 # TODO show pytube video
-                st.video(URL)
+                st.video(yt_path)
 
                 # show df
                 st.dataframe(translated_text_df)
