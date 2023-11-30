@@ -333,7 +333,7 @@ def main():
                 summary_txt = get_summarization(combined_raw)
                 translator2 = GoogleTranslator(source=f"{selected_lang}", target='en')
                 tr2_txt = translator2.translate(summary_txt)
-                st.success(summary_txt)
+                st.info(summary_txt)
                 st.success(tr2_txt)
                 # get_analysis(translated_text_df)
 
