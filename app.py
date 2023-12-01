@@ -162,7 +162,11 @@ def get_summarization(txt):
 def get_chat_response(prompt,txt):
     # langchain qna chain
     # https://github.com/hwchase17/chat-your-data/blob/master/query_data.py
-    cllm=ChatOpenAI(temperature=0, openai_api_key=openai_api_key)
+    cllm=ChatOpenAI(temperature=0, 
+        openai_api_key=openai_api_key,
+        max_tokens=500,
+        streaming=True
+        )
     embeddings=OpenAIEmbeddings(openai_api_key=openai_api_key)
     text_splitter = RecursiveCharacterTextSplitter(
         # Set a really small chunk size, just to show.
@@ -191,8 +195,8 @@ def get_chat_response(prompt,txt):
         You are a language expert assistant in Japanese, Chinese, Korean.
         If you are asked about unrelated expertise, then politely reply I don't know.
         You are expert in vocabulary, grammatical cases, conjugation, slang.
-        Analyse this sentence into its grammatical structures
-        in terms of linguistic and phonetic meanings
+        Analyse this sentence into its translation, pronunciation, 
+        grammatical structures in terms of linguistic, phonetic meanings
         based on the following context:
         {summary_text}
         Question: {prompt}
