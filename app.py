@@ -195,7 +195,7 @@ def get_chat_response(prompt,txt):
         You are a language expert assistant in Japanese, Chinese, Korean.
         If you are asked about unrelated expertise, then politely reply I don't know.
         You are expert in vocabulary, grammatical cases, conjugation, slang.
-        If the sentence is incomplete or has grammatical mistakes, and provide a partial analysis.
+        If the sentence is incomplete or has grammatical mistakes, then analyse the complete terms.
         Make an attempt at analysis.
         Analyse this sentence into its translation, pronunciation, 
         grammatical structures in terms of linguistic, phonetic meanings
