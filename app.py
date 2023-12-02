@@ -164,7 +164,7 @@ def get_chat_response(prompt,txt):
     # https://github.com/hwchase17/chat-your-data/blob/master/query_data.py
     cllm=ChatOpenAI(temperature=0, 
         openai_api_key=openai_api_key,
-        max_tokens=500,
+        max_tokens=1000,
         streaming=True
         )
     embeddings=OpenAIEmbeddings(openai_api_key=openai_api_key)
