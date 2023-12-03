@@ -205,9 +205,8 @@ def get_chat_response(prompt,txt):
         Pronunciation:"B",
         Grammatical structure:"C",
         The main terms in this sentence are:["D"],
-        linguistic meaning:"E",
+        linguistic meaning:"In general",
         Phonetic meaning:"F"
-        Analysis:"In general,"
         ```
         Question: `{prompt}` and analyse the main terms
     """
