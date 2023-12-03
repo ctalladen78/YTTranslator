@@ -22,10 +22,7 @@ from langchain.chains import RetrievalQA
 from langchain.chains.question_answering import load_qa_chain
 from langchain.chains import ConversationalRetrievalChain
 from langchain.memory import ConversationBufferMemory
-from langchain.agents.agent_types import AgentType
-# from langchain.agents import create_pandas_dataframe_agent
-# from langchain_experimental.agents.agent_toolkits import create_pandas_dataframe_agent
-# from langchain.agents import load_tools
+
 
 
 from datetime import datetime, timedelta
@@ -201,6 +198,17 @@ def get_chat_response(prompt,txt):
         grammatical structures in terms of linguistic, phonetic meanings
         based on the following context:
         {summary_text}
+        Example:
+        ```
+        Sentence:"Sentence"
+        Translation:"A",
+        Pronunciation:"B",
+        Grammatical structure:"C",
+        The main terms in this sentence are:["D"],
+        linguistic meaning:"E",
+        Phonetic meaning:"F"
+        Analysis:"In general,"
+        ```
         Question: `{prompt}` and analyse the main terms
     """
     # prompt = ChatPromptTemplate.from_template(template)
@@ -232,53 +240,6 @@ def print_data_one_by_one(row):
     st.write(f"{row['start']} : {row['text']}")
     time.sleep(float(row['duration']))
 
-@st.cache_data
-def get_analysis(df):
-    # tools = load_tools(["python_repl"])
-
-    df_agent = create_pandas_dataframe_agent(
-        ChatOpenAI(temperature=0, openai_api_key=openai_api_key),
-        df,
-        verbose=True,
-        # extra_tools=tools
-        )
-    context = """
-    For the following query, if it requires drawing a table, reply as follows:
-            {"table": {"columns": ["column1", "column2", ...], "data": [[value1, value2, ...], [value1, value2, ...], ...]}}
-
-            If the query requires creating a bar chart, reply as follows:
-            {"bar": {"columns": ["A", "B", "C", ...], "data": [25, 24, 10, ...]}}
-
-            If the query requires creating a line chart, reply as follows:
-            {"line": {"columns": ["A", "B", "C", ...], "data": [25, 24, 10, ...]}}
-
-            There can only be two types of chart, "bar" and "line".
-
-            If it is just asking a question that requires neither, reply as follows:
-            {"answer": "answer"}
-            Example:
-            {"answer": "The title with the highest rating is 'Gilead'"}
-
-            If you do not know the answer, reply as follows:
-            {"answer": "I do not know."}
-
-            Return all output as a string.
-
-            All strings in "columns" list and data list, should be in double quotes,
-
-            For example: {"columns": ["title", "ratings_count"], "data": [["Gilead", 361], ["Spider's Web", 5164]]}
-
-            Lets think step by step.
-
-            Below is the query.
-    """
-    res1 = df_agent.run(f"{context}. Show a bar chart by Top 10 words in {selected_lang}")
-    st.write("Show a bar chart by Top 10 words in {selected_lang}")
-    st.success(res1)
-    # res2 = df_agent.run(f"{context} What is the most occurring {selected_lang} word?")
-    # st.success(res2)
-    # res3 = df_agent.run(f"{context} List the top most occuring {selected_lang} classified as nouns")
-    # st.success(res1)
 
 
 def main():
