@@ -12,4 +12,3 @@ streamlit-modal
 langchain-experimental
 tabulate
 tiktoken
-chainlit
