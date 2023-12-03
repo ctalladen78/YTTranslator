@@ -26,6 +26,8 @@ from langchain.agents.agent_types import AgentType
 # from langchain.agents import create_pandas_dataframe_agent
 # from langchain_experimental.agents.agent_toolkits import create_pandas_dataframe_agent
 # from langchain.agents import load_tools
+import chainlit as cl
+
 
 from datetime import datetime, timedelta
 import time
@@ -200,7 +202,7 @@ def get_chat_response(prompt,txt):
         grammatical structures in terms of linguistic, phonetic meanings
         based on the following context:
         {summary_text}
-        Question: {prompt} and analyse the main terms
+        Question: `{prompt}` and analyse the main terms
     """
     # prompt = ChatPromptTemplate.from_template(template)
     # result = qa({"question": prompt, "chat_history": chat_history})
@@ -341,6 +343,7 @@ def main():
                 st.info(summary_txt)
                 st.success(tr2_txt)
                 # get_analysis(translated_text_df)
+                cl.Video(url=yt_path)
 
     # qna_tab
     with qna_tab:
