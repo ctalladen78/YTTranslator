@@ -136,7 +136,7 @@ def get_translation(yt_path):
 @st.cache_data
 # # summarize all translated transcript content
 def get_summarization(txt):
-    llm=OpenAI(temperature=0, openai_api_key=openai_api_key)
+    llm=OpenAI(temperature=0.5, openai_api_key=openai_api_key)
     embeddings=OpenAIEmbeddings(openai_api_key=openai_api_key)
 
     text_splitter = RecursiveCharacterTextSplitter(
@@ -160,7 +160,7 @@ def get_summarization(txt):
 def get_chat_response(prompt,txt):
     # langchain qna chain
     # https://github.com/hwchase17/chat-your-data/blob/master/query_data.py
-    cllm=ChatOpenAI(temperature=0, 
+    cllm=ChatOpenAI(temperature=0.5, 
         openai_api_key=openai_api_key,
         max_tokens=1000,
         streaming=True
@@ -213,7 +213,7 @@ def get_chat_response(prompt,txt):
     # prompt = ChatPromptTemplate.from_template(template)
     # result = qa({"question": prompt, "chat_history": chat_history})
     result = qa.run(template)
-    print(result)
+    # print(result)
     
     return result
 
@@ -231,13 +231,28 @@ def add_top_row(df):
     df = pd.concat([new_row, df], ignore_index=True)
     return df
 
-def print_data_one_by_one(row):
-    # print(row['text'])
-    # update subtitles text
-    st.session_state['subtitle'] = row['text']
-    # st.write(st.session_state['subtitle'])
-    st.write(f"{row['start']} : {row['text']}")
-    time.sleep(float(row['duration']))
+@st.cache_data
+def get_paraphrase(txt):
+    cllm=ChatOpenAI(temperature=1.0, 
+        openai_api_key=openai_api_key,
+        max_tokens=1000,
+        streaming=True
+        )
+    chain = load_qa_chain(llm, chain_type="stuff")
+
+    template = f"""
+        Based on the following context:
+        {summary_text}
+        generate 3 questions related to and similar to
+        {txt}
+        Example:
+        `1. *,
+        2. *,
+        3. *`
+        Response must be in {selected_lang} language
+    """
+    result = chain.run(template)
+    return result
 
 
 
@@ -322,6 +337,8 @@ def main():
                 chat_history.append({"prompt":"res"})
                 print(chat_history)
                 st.success(res)
+                paraph = get_paraphrase(prompt)
+                st.info(paraph)
 
     #     if prompt := st.chat_input():
     #         if not openai_api_key:
