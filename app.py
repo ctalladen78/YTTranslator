@@ -31,11 +31,13 @@ import time
 #Title
 st.title("Youtube CJK translator")
 
-language = ['ja','ko','zh-CN']
-selected_lang = language[0]
+# language = ['ja','ko','zh-CN']
+# selected_lang = language[0]
 # language = [{'ja':"🇯🇵"},{'ko':"🇰🇷"},{'zh-CN':"🇨🇳"}]
 # selected_lang = [lang for lang in language if 'ja' in lang][0]['ja']
 
+if 'selected_lang' not in st.session_state:
+    st.session_state.selected_lang = 'ja'
 
 # modal = Modal("Demo Modal",
 #     key="demo-modal",
@@ -48,7 +50,9 @@ selected_lang = language[0]
 #     # modal.close()
 #     os.kill(st.session_state.pid, signal.SIGKILL)
 # PROC = Process(target=modal)
-
+def lang_changed():
+    st.session_state.selected_lang = selected_lang
+    
 with st.sidebar:
     st.title('🍁 Translator App')
     st.markdown('''
@@ -62,14 +66,25 @@ with st.sidebar:
     openai_api_key = st.text_input("OpenAI API Key", key="chatbot_api_key", type="password")
     "[Get an OpenAI API key](https://platform.openai.com/account/api-keys)"
     #     radio button to select japanese by default
-    st.radio("Language selected:",
-            ["Japanese","Chinese","Korean"])
+    selected_lang = st.radio("Language selected:",
+            ['ja','ko','zh-CN'],
+            key="radio", on_change=lang_changed)
+
     st.write("### About")
     st.markdown('''
-            - Personalized educational assistant
-            - Practical learning through translation
-            - Word analysis
+        - Personalized educational assistant
+        - Practical learning through translation
+        - Word analysis
         ''')
+    st.write("### Pro version")
+    st.markdown('''
+        - Language practice bot
+        - Word bank
+        - Flash cards
+    ''')
+    # TODO email subscription service
+    # customer_email = st.text_input("Sign Up for Pro", type="email",key="signup_email")
+
 
 home_tab, summary_tab, qna_tab = st.tabs(["1️⃣ Translation", "2️⃣ Summary & Analysis", "3️⃣ Question & Answer"])
 
@@ -82,6 +97,9 @@ combined_text = ""
 combined_text_ls = []
 chat_history = []
 combined_raw = ""
+
+
+
 
 @st.cache_data
 def get_timestamps(row):  
@@ -241,15 +259,12 @@ def get_paraphrase(txt):
     chain = load_qa_chain(llm, chain_type="stuff")
 
     template = f"""
-        Based on the following context:
-        {summary_text}
-        generate 3 questions related to and similar to
-        {txt}
-        Example:
-        `1. *,
-        2. *,
-        3. *`
-        Response must be in {selected_lang} language
+        Example format:
+        `1. * (pronounciation) : meaning,
+        2. * (pronounciation): meaning,
+        3. * (pronounciation): meaning`
+        Generate 3 cultural idioms related to
+        {txt} using the main terms
     """
     result = chain.run(template)
     return result
@@ -265,11 +280,8 @@ def main():
     # home
     with home_tab:
         URL = "https://www.youtube.com/watch?v=FiLHU4QiUs8"
-        yt_path = st.text_input("Enter youtube link to translate...", 
-            URL)
-            # placeholder="https://www.youtube.com/watch?v=FiLHU4QiUs8")
+        yt_path = st.text_input("Enter youtube link to translate...", URL)
 
-        st.write("### YT Translation")
         if not openai_api_key:
             # st.error(f"Please provide the missing fields.")
             st.info("Please add your OpenAI API key to continue.")
@@ -294,7 +306,6 @@ def main():
 
                 st.success(f"Language detected: {selected_lang}")
 
-                # TODO show pytube video
                 st.video(yt_path)
 
                 # show df
@@ -302,43 +313,43 @@ def main():
 
 
     # summary_tab
-    with summary_tab:
-        st.write("### Context Summary")
-        if yt_path is None or openai_api_key is None:
-            # st.error(f"Please provide the missing fields.")
-            st.info("Please add your OpenAI API key to continue.")
-            st.stop()
-        else:
-            with st.spinner("Summarizing...."):
-                print(combined_text)
-                summary_txt = get_summarization(combined_raw)
-                translator2 = GoogleTranslator(source=f"{selected_lang}", target='en')
-                tr2_txt = translator2.translate(summary_txt)
-                st.info(summary_txt)
-                st.success(tr2_txt)
+    # with summary_tab:
+    #     st.write("### Context Summary")
+    #     if yt_path is None or openai_api_key is None:
+    #         # st.error(f"Please provide the missing fields.")
+    #         st.info("Please add your OpenAI API key to continue.")
+    #         st.stop()
+    #     else:
+    #         with st.spinner("Summarizing...."):
+    #             print(combined_text)
+    #             summary_txt = get_summarization(combined_raw)
+    #             translator2 = GoogleTranslator(source=f"{selected_lang}", target='en')
+    #             tr2_txt = translator2.translate(summary_txt)
+    #             st.info(summary_txt)
+    #             st.success(tr2_txt)
                 # get_analysis(translated_text_df)
 
     # qna_tab
-    with qna_tab:
-        # 80-20 rule
-        # TODO most occurring japanese words w translation
-        st.write("### Question & Answer")
-        if yt_path is None or openai_api_key is None:
-            # st.error(f"Please provide the missing fields.")
-            st.info("Please add your OpenAI API key to continue.")
-            st.stop()
-        else:
-            # get_chat response
-            prompt = st.text_input("Chat using summary",
-                "お席をお見受けいたしましたら、お声をおかけいたします"
-            )
-            if prompt is not None:
-                res = get_chat_response(prompt,combined_raw)
-                chat_history.append({"prompt":"res"})
-                print(chat_history)
-                st.success(res)
-                paraph = get_paraphrase(prompt)
-                st.info(paraph)
+    # with qna_tab:
+    #     # 80-20 rule
+    #     st.write("### Question & Answer")
+    #     if yt_path is None or openai_api_key is None:
+    #         # st.error(f"Please provide the missing fields.")
+    #         st.info("Please add your OpenAI API key to continue.")
+    #         st.stop()
+    #     else:
+    #         # get_chat response
+    #         prompt = st.text_input("Chat using summary",
+    #             "お席をお見受けいたしましたら、お声をおかけいたします"
+    #         )
+    #         if prompt is not None:
+    #             res = get_chat_response(prompt,combined_raw)
+    #             chat_history.append({"prompt":"res"})
+    #             print(chat_history)
+    #             st.success(res)
+    #             paraph = get_paraphrase(prompt)
+    #             st.write("### Suggestions for further learning")
+    #             st.info(paraph)
 
     #     if prompt := st.chat_input():
     #         if not openai_api_key:
