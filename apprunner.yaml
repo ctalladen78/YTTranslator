@@ -3,10 +3,8 @@ runtime: python3
 build:
   commands:
     build:        
-      - pip3 install pipenv
-      - pipenv install
       - pip3 install -r requirements.txt
 run:
-  command: pipenv run python -m streamlit run app.py
+  command: python3 -m streamlit run app.py
   network: 
     port: 8501
